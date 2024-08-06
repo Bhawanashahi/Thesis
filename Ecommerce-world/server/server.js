@@ -6,13 +6,15 @@ const cors = require("cors");
 const { readdirSync } = require("fs");
 require("dotenv").config();
 
-
 // app
 const app = express();
 
+// Debugging: Print environment variable
+console.log('Database connection string:', process.env.DB_URL);
+
 // db
 mongoose
-  .connect((process.env.DATABASE).toString(), {
+  .connect(process.env.DB_URL, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useFindAndModify: false,
@@ -32,6 +34,6 @@ app.disable('etag');
 readdirSync("./routes").map((r) => app.use("/api", require("./routes/" + r)));
 
 // port
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 5000;
 
 app.listen(port, () => console.log(`Server is running on port ${port}`));
