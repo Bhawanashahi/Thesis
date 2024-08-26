@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Recommendation</title>
+</head>
+<body>
+    <h1>Product Recommendation System</h1>
+    <form id="recommendationForm">
+        <label for="user_id">Enter your User ID:</label><br>
+        <input type="text" id="user_id" name="user_id"><br><br>
+        <button type="submit">Get Recommendations</button>
+    </form>
+    <div id="recommendations"></div>
+
+    <script>
+        document.getElementById('recommendationForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const userId = document.getElementById('user_id').value;
+            fetch('/recommend', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ user_id: userId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.recommended_products) {
+                    const recommendations = data.recommended_products.map(product => `<li>${product}</li>`).join('');
+                    document.getElementById('recommendations').innerHTML = `<ul>${recommendations}</ul>`;
+                } else {
+                    document.getElementById('recommendations').innerHTML = `<p>${data.error}</p>`;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
